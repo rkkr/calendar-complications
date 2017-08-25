@@ -3,6 +3,7 @@ package rkr.calendar.complications;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,73 +14,85 @@ import android.widget.Button;
 import android.support.wearable.complications.ComplicationProviderService;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
 public class ConfigureActivity extends Activity {
 
-    private static final String TAG = "ConfigureActivity";
+    private static final String TAG = "Configure";
+    private static final HashMap<Integer, String> SWITCHES = new HashMap<Integer, String>() {{
+        put(R.id.week, CalendarProvider.WEEK);
+        put(R.id.year, CalendarProvider.YEAR);
+        put(R.id.month_number, CalendarProvider.MONTH_NUMBER);
+        put(R.id.month_text, CalendarProvider.MONTH_TEXT);
+        put(R.id.day, CalendarProvider.DAY);
+    }};
+    private SharedPreferences pref;
+    private int complicationId;
+    private ComponentName provider;
+    private Set<String> selection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configure);
 
-        final int complicationId = getIntent().getExtras().getInt(ComplicationProviderService.EXTRA_COMPLICATION_ID);
-        final ComponentName provider = getIntent().getExtras().getParcelable(ComplicationProviderService.EXTRA_CONFIG_PROVIDER_COMPONENT);
-        final Context context = this.getApplicationContext();
+        complicationId = getIntent().getExtras().getInt(ComplicationProviderService.EXTRA_COMPLICATION_ID);
+        provider = getIntent().getExtras().getParcelable(ComplicationProviderService.EXTRA_CONFIG_PROVIDER_COMPONENT);
         Log.d(TAG, "Configuring complication: " + complicationId);
-        final SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
-        final Set<String> selection = pref.getStringSet(complicationId + "_selection", new HashSet<String>());
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        selection = pref.getStringSet(complicationId + "_selection", new HashSet<String>());
 
-        final Switch switchWeek = findViewById(R.id.week);
-        final Switch switchYear = findViewById(R.id.year);
-        final Switch switchMonthNumber = findViewById(R.id.month_number);
-        final Switch switchMonthText = findViewById(R.id.month_text);
-        final Switch switchDay = findViewById(R.id.day);
-        switchWeek.setChecked(selection.contains(CalendarProvider.WEEK));
-        switchYear.setChecked(selection.contains(CalendarProvider.YEAR));
-        switchMonthNumber.setChecked(selection.contains(CalendarProvider.MONTH_NUMBER));
-        switchMonthText.setChecked(selection.contains(CalendarProvider.MONTH_TEXT));
-        switchDay.setChecked(selection.contains(CalendarProvider.DAY));
+        for (Integer key : SWITCHES.keySet()) {
+            if (selection.contains(SWITCHES.get(key)))
+                ((Switch) findViewById(key)).setChecked(true);
+        }
+    }
 
-        switchMonthNumber.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b)
-                    switchMonthText.setChecked(false);
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        final TextView textSeparator = findViewById(R.id.separator);
+        final int separator = pref.getInt(complicationId + "_separator", 0);
+        if (CalendarProvider.DATE_SEPARATORS[separator].equals(" "))
+            textSeparator.setText("Space");
+        else
+            textSeparator.setText(CalendarProvider.DATE_SEPARATORS[separator]);
+    }
+
+    @Override
+    protected void onPause() {
+        ProviderUpdateRequester requester = new ProviderUpdateRequester(this, provider);
+        requester.requestUpdate(complicationId);
+        super.onPause();
+    }
+
+    public void onSwitchButtonClicked(View view) {
+        if (((Switch) view).isChecked()) {
+            selection.add(SWITCHES.get(view.getId()));
+            if (view.getId() == R.id.month_number) {
+                ((Switch) findViewById(R.id.month_text)).setChecked(false);
+                selection.remove(SWITCHES.get(R.id.month_text));
             }
-        });
-        switchMonthText.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b)
-                    switchMonthNumber.setChecked(false);
+            if (view.getId() == R.id.month_text) {
+                ((Switch) findViewById(R.id.month_number)).setChecked(false);
+                selection.remove(SWITCHES.get(R.id.month_number));
             }
-        });
+        } else {
+            selection.remove(SWITCHES.get(view.getId()));
+        }
+        pref.edit().putStringSet(complicationId + "_selection", selection).apply();
+    }
 
-        Button saveButton = findViewById(R.id.save);
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selection.clear();
-                if (switchWeek.isChecked())
-                    selection.add(CalendarProvider.WEEK);
-                if (switchYear.isChecked())
-                    selection.add(CalendarProvider.YEAR);
-                if (switchMonthNumber.isChecked())
-                    selection.add(CalendarProvider.MONTH_NUMBER);
-                if (switchMonthText.isChecked())
-                    selection.add(CalendarProvider.MONTH_TEXT);
-                if (switchDay.isChecked())
-                    selection.add(CalendarProvider.DAY);
-                pref.edit().putStringSet(complicationId + "_selection", selection).commit();
-                ProviderUpdateRequester requester = new ProviderUpdateRequester(context, provider);
-                requester.requestUpdate(complicationId);
-                finish();
-            }
-        });
+    public void onSeparatorClicked(View view) {
+        Intent intent = new Intent(this, ConfigureSeparatorActivity.class);
+        intent.putExtra(ComplicationProviderService.EXTRA_CONFIG_PROVIDER_COMPONENT, provider);
+        intent.putExtra(ComplicationProviderService.EXTRA_COMPLICATION_ID, complicationId);
 
+        this.startActivity(intent);
     }
 }

@@ -94,20 +94,26 @@ public class CustomComplicationProviderService extends ComplicationProviderServi
             selection = new HashSet<>();
         else
             selection = new HashSet<>(selection);
+        int separator = pref.getInt(complicationId + "_separator", 0);
 
         ComplicationData.Builder complicationData = new ComplicationData.Builder(dataType);
         complicationData.setTapAction(complicationPendingIntent);
-        List<String> rows = CalendarProvider.GetRows(selection, dataType);
-        if (rows.isEmpty())
-            rows.add("Click to configure");
+        List<String> rows = CalendarProvider.GetRows(selection, separator, dataType);
 
         switch (dataType) {
             case ComplicationData.TYPE_SHORT_TEXT:
+                if (rows.isEmpty()) {
+                    rows.add("Tap to");
+                    rows.add("add");
+                }
                 complicationData.setShortText(ComplicationText.plainText(rows.get(0)));
                 if (rows.size() > 1)
                     complicationData.setShortTitle(ComplicationText.plainText(rows.get(1)));
                 break;
             case ComplicationData.TYPE_LONG_TEXT:
+                if (rows.isEmpty()) {
+                    rows.add("Tap to add");
+                }
                 complicationData.setLongText(ComplicationText.plainText(rows.get(0)));
                 if (rows.size() > 1)
                     complicationData.setLongTitle(ComplicationText.plainText(rows.get(1)));

@@ -16,38 +16,63 @@
             android:id="@+id/week"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Weekday" />
+            android:text="Weekday"
+            android:onClick="onSwitchButtonClicked"/>
 
         <Switch
             android:id="@+id/year"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Year" />
+            android:text="Year"
+            android:onClick="onSwitchButtonClicked"/>
 
         <Switch
             android:id="@+id/month_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Month (text)" />
+            android:text="Month (text)"
+            android:onClick="onSwitchButtonClicked"/>
 
         <Switch
             android:id="@+id/month_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Month (number)" />
+            android:text="Month (number)"
+            android:onClick="onSwitchButtonClicked"/>
 
         <Switch
             android:id="@+id/day"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Day" />
+            android:text="Day"
+            android:onClick="onSwitchButtonClicked"/>
 
-        <Button
-            android:id="@+id/save"
-            style="@android:style/Widget.Material.Button.Borderless"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save" />
+            android:orientation="horizontal"
+            android:onClick="onSeparatorClicked">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:gravity="center_vertical"
+                android:text="Separator"
+                android:textAppearance="@android:style/TextAppearance.Material.Widget.TextView.PopupMenu"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent" />
+
+            <TextView
+                android:id="@+id/separator"
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:gravity="center"
+                android:text=""
+                android:textAppearance="@android:style/TextAppearance.Material.Widget.TextView.PopupMenu"/>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
