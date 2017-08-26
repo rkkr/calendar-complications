@@ -26,8 +26,8 @@ public class ConfigureActivity extends Activity {
     private static final HashMap<Integer, String> SWITCHES = new HashMap<Integer, String>() {{
         put(R.id.week, CalendarProvider.WEEK);
         put(R.id.year, CalendarProvider.YEAR);
-        put(R.id.month_number, CalendarProvider.MONTH_NUMBER);
         put(R.id.month_text, CalendarProvider.MONTH_TEXT);
+        put(R.id.month_number, CalendarProvider.MONTH_NUMBER);
         put(R.id.day, CalendarProvider.DAY);
     }};
     private SharedPreferences pref;
@@ -46,10 +46,11 @@ public class ConfigureActivity extends Activity {
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         selection = pref.getStringSet(complicationId + "_selection", new HashSet<String>());
 
-        for (Integer key : SWITCHES.keySet()) {
-            if (selection.contains(SWITCHES.get(key)))
+        for (Integer key : SWITCHES.keySet())
+            if (selection.contains(SWITCHES.get(key))) {
                 ((Switch) findViewById(key)).setChecked(true);
-        }
+                Log.d(TAG, "Found key: " + SWITCHES.get(key));
+            }
     }
 
     @Override
@@ -85,6 +86,8 @@ public class ConfigureActivity extends Activity {
         } else {
             selection.remove(SWITCHES.get(view.getId()));
         }
+        for (String item : selection)
+            Log.d(TAG, "Saving selection: " + item);
         pref.edit().putStringSet(complicationId + "_selection", selection).apply();
     }
 
