@@ -2,7 +2,6 @@ package rkr.calendar.complications;
 
 import android.app.Activity;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,9 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.wearable.complications.ProviderUpdateRequester;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.support.wearable.complications.ComplicationProviderService;
-import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -29,6 +26,7 @@ public class ConfigureActivity extends Activity {
         put(R.id.month_text, CalendarProvider.MONTH_TEXT);
         put(R.id.month_number, CalendarProvider.MONTH_NUMBER);
         put(R.id.day, CalendarProvider.DAY);
+        put(R.id.year_week, CalendarProvider.YEAR_WEEK);
     }};
     private SharedPreferences pref;
     private int complicationId;

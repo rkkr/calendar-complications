@@ -47,6 +47,13 @@
             android:text="Day"
             android:onClick="onSwitchButtonClicked"/>
 
+        <Switch
+            android:id="@+id/year_week"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Week number"
+            android:onClick="onSwitchButtonClicked"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -15,8 +15,9 @@ public class CalendarProvider {
     public static final String MONTH_NUMBER = "month_number";
     public static final String MONTH_TEXT = "month_text";
     public static final String DAY = "day";
+    public static final String YEAR_WEEK = "year_week";
 
-    public static final String[] TYPES = {WEEK, YEAR, MONTH_NUMBER, MONTH_TEXT, DAY};
+    public static final String[] TYPES = {WEEK, YEAR, MONTH_NUMBER, MONTH_TEXT, DAY, YEAR_WEEK};
     public static final String[] DATE_SEPARATORS = {" ", ".", "-", "/"};
 
     public static List<String> GetRows(Set<String> selection, int separator, int complicationType) {
@@ -66,6 +67,9 @@ public class CalendarProvider {
                         break;
                     case DAY:
                         line = String.format(Locale.US, "%02d", calendar.get(Calendar.DAY_OF_MONTH));
+                        break;
+                    case YEAR_WEEK:
+                        line = String.format(Locale.US, "WK%02d", calendar.get(Calendar.WEEK_OF_YEAR));
                         break;
                 }
                 temp.add(line);
