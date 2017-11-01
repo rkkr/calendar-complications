@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context="rkr.calendar.complications.ConfigureActivity">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/diag_preferred_padding" >
+
+        <RadioButton
+            android:id="@+id/radioButton1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="YYYYMMDD"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+        <RadioButton
+            android:id="@+id/radioButton2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="YYMMDD"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+        <RadioButton
+            android:id="@+id/radioButton3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="DDMMYYYY"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+        <RadioButton
+            android:id="@+id/radioButton4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="onRadioButtonClicked"
+            android:text="DDMMYY"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+        <RadioButton
+            android:id="@+id/radioButton5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MMDDYYYY"
+            android:onClick="onRadioButtonClicked"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+        <RadioButton
+            android:id="@+id/radioButton6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MMDDYY"
+            android:onClick="onRadioButtonClicked"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+    </RadioGroup>
+</ScrollView>

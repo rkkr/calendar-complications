@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2017 Raimondas Rimkus
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,10 +56,11 @@ public class ComplicationProvider extends ComplicationProviderService {
         SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
         Set<String> selection = pref.getStringSet(complicationId + "_selection", new HashSet<String>());
         int separator = pref.getInt(complicationId + "_separator", 0);
+        int dateFormat = pref.getInt(complicationId + "_date_format", 0);
 
         ComplicationData.Builder complicationData = new ComplicationData.Builder(dataType);
         complicationData.setTapAction(complicationPendingIntent);
-        List<String> rows = CalendarProvider.GetRows(selection, separator, dataType);
+        List<String> rows = CalendarProvider.GetRows(selection, separator, dateFormat, dataType);
 
         switch (dataType) {
             case ComplicationData.TYPE_SHORT_TEXT:

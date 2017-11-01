@@ -81,5 +81,13 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Widget.TextView.PopupMenu"/>
         </LinearLayout>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:gravity="center_vertical"
+            android:text="Date Format"
+            android:onClick="onDateFormatClicked"
+            android:textAppearance="@android:style/TextAppearance.Material.Widget.TextView.PopupMenu"/>
+
     </LinearLayout>
 </ScrollView>

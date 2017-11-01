@@ -24,13 +24,15 @@ import android.support.wearable.complications.ComplicationProviderService;
 import android.view.View;
 import android.widget.RadioButton;
 
-public class ConfigureSeparatorActivity extends Activity {
+public class ConfigureDateFormatActivity extends Activity {
 
     //private static final String TAG = "ConfigureSeparator";
     private static final int[] RADIOS = {R.id.radioButton1,
             R.id.radioButton2,
             R.id.radioButton3,
-            R.id.radioButton4};
+            R.id.radioButton4,
+            R.id.radioButton5,
+            R.id.radioButton6};
     private int complicationId;
     //private ComponentName provider;
     private SharedPreferences pref;
@@ -38,19 +40,19 @@ public class ConfigureSeparatorActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_configure_seperator);
+        setContentView(R.layout.activity_configure_date_format);
 
         complicationId = getIntent().getExtras().getInt(ComplicationProviderService.EXTRA_COMPLICATION_ID);
         //provider = getIntent().getExtras().getParcelable(ComplicationProviderService.EXTRA_CONFIG_PROVIDER_COMPONENT);
         //Log.d(TAG, "Configuring complication: " + complicationId);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
-        ((RadioButton) findViewById(RADIOS[pref.getInt(complicationId + "_separator", 0)])).setChecked(true);
+        ((RadioButton) findViewById(RADIOS[pref.getInt(complicationId + "_date_format", 0)])).setChecked(true);
     }
 
     public void onRadioButtonClicked(View view) {
         if (((RadioButton) view).isChecked())
             for (int i=0; i<RADIOS.length; i++)
                 if (view.getId() == RADIOS[i])
-                    pref.edit().putInt(complicationId + "_separator", i).apply();
+                    pref.edit().putInt(complicationId + "_date_format", i).apply();
     }
 }

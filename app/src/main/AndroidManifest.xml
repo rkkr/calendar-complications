@@ -39,6 +39,10 @@
             android:name=".ConfigureSeparatorActivity"
             android:label="@string/app_name" />
 
+        <activity
+            android:name=".ConfigureDateFormatActivity"
+            android:label="@string/app_name" />
+
         <!--<receiver
             android:name=".ComplicationReceiver"
             android:enabled="true"
