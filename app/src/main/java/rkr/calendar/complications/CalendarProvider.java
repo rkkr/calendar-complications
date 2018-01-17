@@ -63,6 +63,7 @@ public class CalendarProvider {
         Calendar calendar = Calendar.getInstance();
         Set<String> _selection = new HashSet<>(selection);
         boolean shortYear = dateFormat % 2 == 1;
+        int shortComplication = complicationType == ComplicationData.TYPE_SHORT_TEXT ? Calendar.SHORT : Calendar.LONG;
 
         StringBuilder line = new StringBuilder("");
         for (String type : DATE_FORMATS.get(dateFormat))
@@ -70,10 +71,8 @@ public class CalendarProvider {
                 _selection.remove(type);
                 switch (type) {
                     case WEEK:
-                        boolean shortModeWeekday = (complicationType == ComplicationData.TYPE_SHORT_TEXT);
-                        int dayOfWeekValue = calendar.get(Calendar.DAY_OF_WEEK);
-                        String weekday = fieldToString(Calendar.DAY_OF_WEEK, dayOfWeekValue, shortModeWeekday);
-                        line.append(weekday);
+                        String dayOfWeek = calendar.getDisplayName(Calendar.DAY_OF_WEEK, shortComplication, Locale.getDefault());
+                        line.append(dayOfWeek.toUpperCase());
                         break;
                     case YEAR:
                         int year = calendar.get(Calendar.YEAR);
@@ -83,10 +82,8 @@ public class CalendarProvider {
                         line.append(String.format(Locale.getDefault(), "%02d", calendar.get(Calendar.MONTH) + 1));
                         break;
                     case MONTH_TEXT:
-                        boolean shortModeMonth = (complicationType == ComplicationData.TYPE_SHORT_TEXT);
-                        int dayOfMonthValue = calendar.get(Calendar.MONTH);
-                        String month = fieldToString(Calendar.MONTH, dayOfMonthValue, shortModeMonth);
-                        line.append(month);
+                        String dayOfMonthValue = calendar.getDisplayName(Calendar.MONTH, shortComplication, Locale.getDefault());
+                        line.append(dayOfMonthValue.toUpperCase());
                         break;
                     case DAY:
                         line.append(String.format(Locale.getDefault(), "%02d", calendar.get(Calendar.DAY_OF_MONTH)));
@@ -112,10 +109,5 @@ public class CalendarProvider {
             if (b.contains(_a))
                 return true;
         return false;
-    }
-
-    private static String fieldToString(int field, int value, boolean shortMode)
-    {
-        return Calendar.getInstance().getDisplayName(field, shortMode? Calendar.SHORT : Calendar.LONG, Locale.getDefault()).toUpperCase();
     }
 }

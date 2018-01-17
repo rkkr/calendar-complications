@@ -102,7 +102,9 @@ public class ConfigureActivity extends Activity {
         }
         for (String item : selection)
             Log.d(TAG, "Saving selection: " + item);
-        pref.edit().putStringSet(complicationId + "_selection", selection).apply();
+        //.apply() doesn't persist application restarts for StringSet since Android 2.6
+        pref.edit().remove(complicationId + "_selection").commit();
+        pref.edit().putStringSet(complicationId + "_selection", selection).commit();
     }
 
     public void onSeparatorClicked(View view) {
