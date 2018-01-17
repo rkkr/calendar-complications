@@ -64,39 +64,43 @@ public class CalendarProvider {
         Set<String> _selection = new HashSet<>(selection);
         boolean shortYear = dateFormat % 2 == 1;
 
-        String line = "";
+        StringBuilder line = new StringBuilder("");
         for (String type : DATE_FORMATS.get(dateFormat))
             if (_selection.contains(type)) {
                 _selection.remove(type);
                 switch (type) {
                     case WEEK:
-                        String weekday = WeekdayToString(calendar.get(Calendar.DAY_OF_WEEK));
-                        line = complicationType == ComplicationData.TYPE_SHORT_TEXT ? weekday.substring(0, 3) : weekday;
+                        boolean shortModeWeekday = (complicationType == ComplicationData.TYPE_SHORT_TEXT);
+                        int dayOfWeekValue = calendar.get(Calendar.DAY_OF_WEEK);
+                        String weekday = fieldToString(Calendar.DAY_OF_WEEK, dayOfWeekValue, shortModeWeekday);
+                        line.append(weekday);
                         break;
                     case YEAR:
                         int year = calendar.get(Calendar.YEAR);
-                        line += String.format(Locale.US, "%02d", shortYear ? year % 100 : year);
+                        line.append(String.format(Locale.getDefault(), "%02d", shortYear ? year % 100 : year));
                         break;
                     case MONTH_NUMBER:
-                        line += String.format(Locale.US, "%02d", calendar.get(Calendar.MONTH) + 1);
+                        line.append(String.format(Locale.getDefault(), "%02d", calendar.get(Calendar.MONTH) + 1));
                         break;
                     case MONTH_TEXT:
-                        String month = MonthToString(calendar.get(Calendar.MONTH));
-                        line += complicationType == ComplicationData.TYPE_SHORT_TEXT ? month.substring(0, 3) : month;
+                        boolean shortModeMonth = (complicationType == ComplicationData.TYPE_SHORT_TEXT);
+                        int dayOfMonthValue = calendar.get(Calendar.MONTH);
+                        String month = fieldToString(Calendar.MONTH, dayOfMonthValue, shortModeMonth);
+                        line.append(month);
                         break;
                     case DAY:
-                        line += String.format(Locale.US, "%02d", calendar.get(Calendar.DAY_OF_MONTH));
+                        line.append(String.format(Locale.getDefault(), "%02d", calendar.get(Calendar.DAY_OF_MONTH)));
                         break;
                     case YEAR_WEEK:
-                        line = String.format(Locale.US, "WK%d", calendar.get(Calendar.WEEK_OF_YEAR));
+                        line.append(String.format(Locale.getDefault(), "WK%d", calendar.get(Calendar.WEEK_OF_YEAR)));
                         break;
                 }
                 if (SINGLE_LINE.get(complicationType).contains(type) && commonElementExists(_selection, SINGLE_LINE.get(complicationType))) {
-                    line += DATE_SEPARATORS[separator];
+                    line.append(DATE_SEPARATORS[separator]);
                     continue;
                 }
-                temp.add(line);
-                line = "";
+                temp.add(line.toString());
+                line = new StringBuilder("");
             }
 
         return temp;
@@ -110,55 +114,8 @@ public class CalendarProvider {
         return false;
     }
 
-    private static String WeekdayToString(int weekday)
+    private static String fieldToString(int field, int value, boolean shortMode)
     {
-        switch (weekday) {
-            case Calendar.MONDAY:
-                return "MONDAY";
-            case Calendar.TUESDAY:
-                return "TUESDAY";
-            case Calendar.WEDNESDAY:
-                return "WEDNESDAY";
-            case Calendar.THURSDAY:
-                return "THURSDAY";
-            case Calendar.FRIDAY:
-                return "FRIDAY";
-            case Calendar.SATURDAY:
-                return "SATURDAY";
-            case Calendar.SUNDAY:
-                return "SUNDAY";
-        }
-        return "";
-    }
-
-    private static String MonthToString(int month)
-    {
-        switch (month) {
-            case Calendar.JANUARY:
-                return "JANUARY";
-            case Calendar.FEBRUARY:
-                return "FEBRUARY";
-            case Calendar.MARCH:
-                return "MARCH";
-            case Calendar.APRIL:
-                return "APRIL";
-            case Calendar.MAY:
-                return "MAY";
-            case Calendar.JUNE:
-                return "JUNE";
-            case Calendar.JULY:
-                return "JULY";
-            case Calendar.AUGUST:
-                return "AUGUST";
-            case Calendar.SEPTEMBER:
-                return "SEPTEMBER";
-            case Calendar.OCTOBER:
-                return "OCTOBER";
-            case Calendar.NOVEMBER:
-                return "NOVEMBER";
-            case Calendar.DECEMBER:
-                return "DECEMBER";
-        }
-        return "";
+        return Calendar.getInstance().getDisplayName(field, shortMode? Calendar.SHORT : Calendar.LONG, Locale.getDefault()).toUpperCase();
     }
 }
